@@ -94,5 +94,4 @@ class AnimeRepositoryTest {
         assertEquals(0, animes.getTotalElements());
         assertThat(animes).isEmpty();
     }
-
 }
