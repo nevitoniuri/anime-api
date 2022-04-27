@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Anime> create(@RequestBody AnimeRequest animeRequest, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<Anime> create(@RequestBody @Valid AnimeRequest animeRequest, UriComponentsBuilder uriComponentsBuilder) {
         Anime animeSalvo = animeService.save(modelMapper.map(animeRequest, Anime.class));
         URI uri = uriComponentsBuilder.path("/animes/{id}").buildAndExpand(animeSalvo.getId()).toUri();
         return ResponseEntity.created(uri).body(animeSalvo);
@@ -50,7 +51,7 @@ public class AnimeController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Anime> replace(@PathVariable Long id, @RequestBody AnimeRequest animeRequest) {
+    public ResponseEntity<Anime> replace(@PathVariable Long id, @RequestBody @Valid AnimeRequest animeRequest) {
         Anime anime = animeService.findById(id);
         modelMapper.map(animeRequest, anime);
         return ResponseEntity.ok(animeService.save(anime));

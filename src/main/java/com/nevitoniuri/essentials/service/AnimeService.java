@@ -6,6 +6,7 @@ import com.nevitoniuri.essentials.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
 
+    @Transactional(readOnly = true)
     public List<Anime> list(String name) {
         List<Anime> animes;
         if (name == null) {
@@ -26,6 +28,7 @@ public class AnimeService {
         return animes;
     }
 
+    @Transactional(readOnly = true)
     public Anime findById(Long id) {
         return animeRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Anime não encontrado"));
@@ -45,6 +48,7 @@ public class AnimeService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         animeRepository.delete(findById(id));
     }
@@ -53,6 +57,7 @@ public class AnimeService {
         return animeRepository.existsByName(name);
     }
 
+    @Transactional(readOnly = true)
     public List<Anime> findByName(String name) {
         List<Anime> animes = animeRepository.findByName(name);
         if (animes.isEmpty()) {
