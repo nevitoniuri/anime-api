@@ -4,6 +4,8 @@ import com.nevitoniuri.essentials.exception.BadRequestException;
 import com.nevitoniuri.essentials.model.Anime;
 import com.nevitoniuri.essentials.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +20,12 @@ public class AnimeService {
     private final AnimeRepository animeRepository;
 
     @Transactional(readOnly = true)
-    public List<Anime> list(String name) {
-        List<Anime> animes;
+    public Page<Anime> list(String name, Pageable pageable) {
+        Page<Anime> animes;
         if (name == null) {
-            animes = animeRepository.findAll();
+            animes = animeRepository.findAll(pageable);
         } else {
-            animes = findByName(name);
+            animes = findByName(name, pageable);
         }
         return animes;
     }
@@ -58,8 +60,8 @@ public class AnimeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Anime> findByName(String name) {
-        List<Anime> animes = animeRepository.findByName(name);
+    public Page<Anime> findByName(String name, Pageable pageable) {
+        Page<Anime> animes = animeRepository.findByName(name, pageable);
         if (animes.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found");
         }

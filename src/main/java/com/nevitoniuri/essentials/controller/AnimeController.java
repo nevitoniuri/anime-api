@@ -6,13 +6,15 @@ import com.nevitoniuri.essentials.service.AnimeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("animes")
@@ -24,8 +26,9 @@ public class AnimeController {
     private final ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<Anime>> list(@RequestParam(required = false) String name) {
-        return ResponseEntity.ok(animeService.list(name));
+    public ResponseEntity<Page<Anime>> list(@RequestParam(required = false) String name,
+                                            @PageableDefault(page = 0, size = 10, sort = "name") Pageable pageable) {
+        return ResponseEntity.ok(animeService.list(name, pageable));
     }
 
     @GetMapping("{id}")
