@@ -37,17 +37,10 @@ public class AnimeService {
     }
 
     public Anime save(Anime anime) {
-        if (anime.getId() == null) {
-            if (isAnimeExists(anime.getName())) {
-                throw new BadRequestException("Anime já existe");
-            }
-            return animeRepository.save(anime);
-        } else {
-            if (isAnimeExists(anime.getName())) {
-                throw new BadRequestException("Anime já existe");
-            }
-            return animeRepository.saveAndFlush(anime);
+        if (isAnimeExists(anime.getName())) {
+            throw new BadRequestException("Anime já existe");
         }
+        return animeRepository.save(anime);
     }
 
     @Transactional
@@ -63,7 +56,7 @@ public class AnimeService {
     public Page<Anime> findByName(String name, Pageable pageable) {
         Page<Anime> animes = animeRepository.findByName(name, pageable);
         if (animes.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found");
+            throw new BadRequestException("Anime não encontrado");
         }
         return animes;
     }

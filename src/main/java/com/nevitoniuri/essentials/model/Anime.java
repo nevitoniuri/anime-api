@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Anime {
